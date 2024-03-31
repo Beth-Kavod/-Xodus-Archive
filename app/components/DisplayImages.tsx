@@ -15,7 +15,6 @@ interface File extends MediaSource {
 
 export default function DisplayImages({ params }: Props) {
   const { selectedFiles, setSelectedFiles } = params
-  console.log(selectedFiles)
   const [pickedFile, setPickedFile] = useState<File>({} as File)
 
   function removeFile() {

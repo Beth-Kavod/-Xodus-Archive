@@ -5,22 +5,29 @@ import SelectImages from "./components/SelectImages";
 import DisplayImages from "./components/DisplayImages";
 import LoadingSpinner from './components/LoadingSpinner';
 import Message from './components/Message';
-import { useState, useEffect } from 'react'
+import { useState, useRef } from 'react'
 
 export default function Home() {
   const [selectedFiles, setSelectedFiles] = useState<any>([]);
   const [name, setName] = useState<any>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string>("Hello");
+  const imageRef = useRef();
 
   function validateForm() {
     if (!name) {
       alert('Please enter your name')
       return false
+    } else if (name.length > 20) {
+      alert('Name must be less than 20 characters')
+      return false
     }
 
     if (!selectedFiles.length) {
       alert('Please select at least one file')
+      return false
+    } else if (selectedFiles.length > 50) {
+      alert('Please select no more than 50 files at a time')
       return false
     }
 
@@ -51,13 +58,15 @@ export default function Home() {
 
       console.log('Files uploaded successfully:', await response.json());
       setMessage('Files uploaded successfully')
+      
     } catch (error: any) {
       console.error('Error uploading files:', error);
       setMessage(error.message)
     } finally {
       setLoading(false)
     }
-  };
+  }
+  
   return (
     <main className={styles.main}>
       { loading && <LoadingSpinner /> }
@@ -70,7 +79,7 @@ export default function Home() {
         </div>
         <hr />
         <div className={styles.formGroup}>
-          <SelectImages params={{ selectedFiles, setSelectedFiles}} />
+          <SelectImages params={{ selectedFiles, setSelectedFiles, imageRef }} />
         </div>
         <hr />
         <div className={styles.formGroup}>
