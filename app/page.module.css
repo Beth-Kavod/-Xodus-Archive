@@ -5,10 +5,22 @@
   align-items: center;
   padding: 6rem;
   min-height: 100vh;
+  gap: 40px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 400px;
+  min-height: 300px;
+  border: 2px solid gray;
+  box-sizing: border-box;
+  padding: 20px;
+  border-radius: 10px;
 }
 
 .formGroup {
   display: flex;
-  width: 400px;
   justify-content: space-between;
 }
