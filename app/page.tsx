@@ -3,11 +3,15 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import SelectImages from "./components/SelectImages";
 import DisplayImages from "./components/DisplayImages";
+import LoadingSpinner from './components/LoadingSpinner';
+import Message from './components/Message';
 import { useState, useEffect } from 'react'
 
 export default function Home() {
   const [selectedFiles, setSelectedFiles] = useState<any>([]);
   const [name, setName] = useState<any>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("Hello");
 
   function validateForm() {
     if (!name) {
@@ -28,6 +32,8 @@ export default function Home() {
     
     if (!validateForm()) return
 
+    setLoading(true)
+
     try {
       const formData = new FormData();
       selectedFiles.forEach((file: string | Blob, index: any) => {
@@ -44,12 +50,19 @@ export default function Home() {
       });
 
       console.log('Files uploaded successfully:', await response.json());
-    } catch (error) {
+      setMessage('Files uploaded successfully')
+    } catch (error: any) {
       console.error('Error uploading files:', error);
+      setMessage(error.message)
+    } finally {
+      setLoading(false)
     }
   };
   return (
     <main className={styles.main}>
+      { loading && <LoadingSpinner /> }
+      { message && <Message params={{ textMessage: message }}/> }
+      <h1>@Xodus media archiver</h1>
       <form action="" onSubmit={(event) => handleUpload(event)} className={styles.form}>
         <div className={styles.formGroup}>
           <label htmlFor="name">What is your name?</label>

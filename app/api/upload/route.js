@@ -1,7 +1,21 @@
 import { NextResponse } from 'next/server'
-
+import dotenv from 'dotenv'
+dotenv.config()
 
 export const POST = async (request) => {
+  var dbx = new Dropbox({ accessToken: process.env.DROPBOX_ACCESS_TOKEN });
+
+  dbx.usersGetCurrentAccount()
+  .then(function(response) {
+    console.log(response);
+  })
+  .catch(function(error) {
+    console.error(error);
+  });
+
+  return NextResponse.json({
+    success: true
+  })
   try {
     const getAllFormDataValues = (formData, key) => {
       const values = [];
@@ -19,7 +33,7 @@ export const POST = async (request) => {
 
 
     // Send the files to the server
-    
+
 
 
 
