@@ -19,6 +19,7 @@ export default function UploadImages({ params }: Props) {
       onChange={handleFileChange} 
       accept='image/*, video/*'
       ref={imageRef}
+      value=""
       multiple 
     />
   );

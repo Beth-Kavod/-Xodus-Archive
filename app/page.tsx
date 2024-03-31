@@ -9,29 +9,38 @@ import { useState, useRef } from 'react'
 
 export default function Home() {
   const [selectedFiles, setSelectedFiles] = useState<any>([]);
-  const [name, setName] = useState<any>('');
+  const [email, setEmail] = useState<any>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("Hello");
+  const [message, setMessage] = useState<string>("");
   const imageRef = useRef();
 
   function validateForm() {
-    if (!name) {
-      alert('Please enter your name')
+    const emailRegex = /^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/
+
+    if (!email) {
+      setMessage('Please enter your email')
       return false
-    } else if (name.length > 20) {
-      alert('Name must be less than 20 characters')
+    } else if (!emailRegex.test(email)) {
+      setMessage('Email must follow proper email format')
       return false
     }
 
     if (!selectedFiles.length) {
-      alert('Please select at least one file')
+      setMessage('Please select at least one file')
       return false
     } else if (selectedFiles.length > 50) {
-      alert('Please select no more than 50 files at a time')
+      setMessage('Please select no more than 50 files at a time')
       return false
     }
 
     return true
+  }
+
+  function resetForm() {
+    setSelectedFiles([])
+    /* if (imageRef.current) { 
+      imageRef.current.value = ""
+    } */
   }
 
   const handleUpload = async (event: any) => {
@@ -43,11 +52,11 @@ export default function Home() {
 
     try {
       const formData = new FormData();
-      selectedFiles.forEach((file: string | Blob, index: any) => {
+      selectedFiles.forEach((file: string | Blob) => {
         formData.append(`file`, file);
       });
 
-      formData.append('name', name);
+      formData.append('email', email);
 
       // Send the files to the server
 
@@ -64,6 +73,7 @@ export default function Home() {
       setMessage(error.message)
     } finally {
       setLoading(false)
+      resetForm()
     }
   }
   
@@ -74,8 +84,8 @@ export default function Home() {
       <h1>@Xodus media archiver</h1>
       <form action="" onSubmit={(event) => handleUpload(event)} className={styles.form}>
         <div className={styles.formGroup}>
-          <label htmlFor="name">What is your name?</label>
-          <input type="text" placeholder="John Doe" onChange={(e) => setName(e.target.value)}/>
+          <label htmlFor="email">What is your email?</label>
+          <input type="text" placeholder="Example123@gmail.com" onChange={(e) => setEmail(e.target.value)}/>
         </div>
         <hr />
         <div className={styles.formGroup}>

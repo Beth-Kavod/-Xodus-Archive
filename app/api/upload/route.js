@@ -20,7 +20,7 @@ export const POST = async (request) => {
 
     const files = getAllFormDataValues(formData, 'file');
 
-    const newFolderName = formData.get('name')
+    const newFolderName = formData.get('email')
     const personalFolder = await createNewDropboxFolder(newFolderName)
 
     // Upload each file in parallel

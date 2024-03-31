@@ -10,7 +10,7 @@ export default function Message({ params }: Props) {
   const { textMessage } = params
   return (
     <div className="message">
-      <p>Welcome, {textMessage}!</p>
+      <p>{textMessage}</p>
     </div>
   )
 }

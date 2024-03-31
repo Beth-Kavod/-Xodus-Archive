@@ -82,10 +82,8 @@ export async function createNewDropboxFolder(folderName) {
 
   async function checkIfFolderExists(path) {
     try {
-      await dbx.filesGetMetadata({ path: path })
-        .then(function(response) {
-          return response
-        })
+      const response = await dbx.filesGetMetadata({ path: path, include_media_info: false })
+      return response
     } catch (error) {
       if (error.status === 409) {
         return false;
@@ -96,26 +94,25 @@ export async function createNewDropboxFolder(folderName) {
   }
 
   const dbx = new Dropbox(config);
+
   const today = new Date()
   const folderPath = `/${folderName} - ${formatDate(today.toLocaleDateString())}`;
 
 
   const folderExists = await checkIfFolderExists(folderPath)
-
+  console.log("FOLDER EXISTS: ", folderExists)
   // If the folder exists, return the path, otherwise try to create it
-  if (!!folderExists) {
-    const folder = await dbx.filesGetMetadata({ path: folderPath });
-    console.log(folder)
-    return folder.result.path_display
-  }
+  if (folderExists) return folderExists.result.path_lower
   
-  await dbx.filesCreateFolderV2({ path: folderPath })
+  const createNewFolder = await dbx.filesCreateFolderV2({ path: folderPath })
   .then(function(response) {
     // Return the path to the new folder
     console.log(response)
-    return response.result.path_display
+    return response.result.metadata.path_lower
   })
   .catch(function(error) {
-    // console.error(error);
+    console.error(error);
   });
+
+  return createNewFolder
 }
