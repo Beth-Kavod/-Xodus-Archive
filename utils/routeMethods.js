@@ -1,17 +1,21 @@
 import { Dropbox } from 'dropbox';
+import { refreshDropboxToken } from './refreshDropboxToken';
 import dotenv from 'dotenv';
 dotenv.config();
+
+const refreshedToken = await refreshDropboxToken()
 
 // Dropbox config
 const config = {
   fetch,
   clientId: process.env.DROPBOX_APP_KEY,
   clientSecret: process.env.DROPBOX_APP_SECRET,
-  accessToken: process.env.DROPBOX_ACCESS_TOKEN 
+  accessToken: refreshedToken.access_token 
 }
 
 // Upload a single file to Dropbox
 export function uploadFileToDropbox(file, path = '/') {
+
   const dbx = new Dropbox(config);
   dbx.usersGetCurrentAccount()
   .catch(function(error) {
@@ -22,9 +26,6 @@ export function uploadFileToDropbox(file, path = '/') {
 
   if (file.size < UPLOAD_FILE_SIZE_LIMIT) {
     dbx.filesUpload({ path: `${path}/${file.name}`,  contents: file })
-      .then((response) => {
-        console.log(response);
-      })
       .catch(function(error) {
         console.error(error.error || error);
       });
@@ -100,14 +101,12 @@ export async function createNewDropboxFolder(folderName) {
 
 
   const folderExists = await checkIfFolderExists(folderPath)
-  console.log("FOLDER EXISTS: ", folderExists)
   // If the folder exists, return the path, otherwise try to create it
   if (folderExists) return folderExists.result.path_lower
   
   const createNewFolder = await dbx.filesCreateFolderV2({ path: folderPath })
   .then(function(response) {
     // Return the path to the new folder
-    console.log(response)
     return response.result.metadata.path_lower
   })
   .catch(function(error) {

@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server'
 import { Dropbox } from 'dropbox'
 import { uploadFileToDropbox, createNewDropboxFolder } from '@/utils/routeMethods'
+import { refreshDropboxToken } from '@/utils/refreshDropboxToken'
 import dotenv from 'dotenv'
 dotenv.config()
 
 export const POST = async (request) => {
   try {
+    // Get a new dropbox token from the Dropbox API
     const getAllFormDataValues = (formData, key) => {
       const values = [];
       for (const [formDataKey, formDataValue] of formData.entries()) {
