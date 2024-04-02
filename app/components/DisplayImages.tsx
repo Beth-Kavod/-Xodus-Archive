@@ -35,11 +35,11 @@ export default function DisplayImages({ params }: Props) {
           ))}
         </select>
       </div>
-      { pickedFile.name && 
+      { pickedFile.name && selectedFiles.length > 1 &&
         <>
           <br />
           <Image
-            src={URL.createObjectURL(pickedFile)}
+            src={ URL.createObjectURL(pickedFile)}
             alt={`Selected file`}
             width="0"
             height="0"
