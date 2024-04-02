@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
-import { Dropbox } from 'dropbox'
 import { uploadFileToDropbox, createNewDropboxFolder } from '@/utils/routeMethods'
-import { refreshDropboxToken } from '@/utils/refreshDropboxToken'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -26,13 +24,14 @@ export const POST = async (request) => {
     const personalFolder = await createNewDropboxFolder(newFolderName)
 
     // Upload each file in parallel
-    files.forEach(async file => await uploadFileToDropbox(file, personalFolder));
+    await Promise.all(files.map(async file => {
+      await uploadFileToDropbox(file, personalFolder);
+    }));
 
     return NextResponse.json({
       success: true,
       message: 'Files uploaded successfully',
       fileCount: formData.getAll('file').length,
-      allFilesNames: files
     }, {
       status: 200
     })
