@@ -26,7 +26,7 @@ export const POST = async (request) => {
     const personalFolder = await createNewDropboxFolder(newFolderName)
 
     // Upload each file in parallel
-    files.forEach(file => uploadFileToDropbox(file, personalFolder));
+    files.forEach(async file => await uploadFileToDropbox(file, personalFolder));
 
     return NextResponse.json({
       success: true,

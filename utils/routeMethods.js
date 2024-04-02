@@ -3,19 +3,20 @@ import { refreshDropboxToken } from './refreshDropboxToken';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const refreshedToken = await refreshDropboxToken()
-
-// Dropbox config
-const config = {
-  fetch,
-  clientId: process.env.DROPBOX_APP_KEY,
-  clientSecret: process.env.DROPBOX_APP_SECRET,
-  accessToken: refreshedToken.access_token 
-}
+// Initialize Dropbox config
+const initializeDropbox = async () => {
+  const refreshedToken = await refreshDropboxToken();
+  return {
+    fetch,
+    clientId: process.env.DROPBOX_APP_KEY,
+    clientSecret: process.env.DROPBOX_APP_SECRET,
+    accessToken: refreshedToken.access_token
+  };
+};
 
 // Upload a single file to Dropbox
-export function uploadFileToDropbox(file, path = '/') {
-
+export async function uploadFileToDropbox(file, path = '/') {
+  const config = await initializeDropbox()
   const dbx = new Dropbox(config);
   dbx.usersGetCurrentAccount()
   .catch(function(error) {
@@ -75,6 +76,7 @@ export function uploadFileToDropbox(file, path = '/') {
 }
 
 export async function createNewDropboxFolder(folderName) {
+  const config = await initializeDropbox()
   // Format the date so it doesn't have slashes
   function formatDate(dateString) {
     const parts = dateString.split("/");
