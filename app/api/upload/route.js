@@ -17,10 +17,9 @@ export const POST = async (request) => {
     };
   
     const formData = await request.formData()
-    console.log(`All files: ${formData.getAll('file')}`)
+    console.log(formData.getAll('file'))
     
     const files = getAllFormDataValues(formData, 'file');
-    console.log(`All form files: ${files}`)
 
     const newFolderName = formData.get('email')
     const personalFolder = await createNewDropboxFolder(newFolderName)
