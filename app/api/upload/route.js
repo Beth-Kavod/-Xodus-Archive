@@ -25,14 +25,18 @@ export const POST = async (request) => {
     const personalFolder = await createNewDropboxFolder(newFolderName)
 
     // Upload each file in parallel
-    await Promise.all(files.map(async file => {
-      await uploadFileToDropbox(file, personalFolder);
-    }));
+    const uploadPromises = files.map(async file => {
+      return uploadFileToDropbox(file, personalFolder);
+    });
+
+    // Check if every promise is resolved or rejected
+    const results = await Promise.allSettled(uploadPromises);
 
     return NextResponse.json({
       success: true,
       message: 'Files uploaded successfully',
       fileCount: formData.getAll('file').length,
+      results
     }, {
       status: 200
     })
