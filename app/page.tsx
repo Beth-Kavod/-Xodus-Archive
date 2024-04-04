@@ -51,30 +51,53 @@ export default function Home() {
     setLoading(true)
 
     try {
-      const formData = new FormData();
-      selectedFiles.forEach((file: string | Blob) => {
-        formData.append(`file`, file);
-      });
-
-      formData.append('email', email);
-
-      // Send the files to the server
-
-      const response = await fetch('./api/upload', {
-        method: 'POST',
-        body: formData
-      });
-
-      console.log('Files uploaded successfully:', await response.json());
-      setMessage('Files uploaded successfully')
-      
-    } catch (error: any) {
-      console.error('Error uploading files:', error);
-      setMessage(error.message)
+      const batchSize = 3; // Set the batch size as per your preference
+      const totalFiles = selectedFiles.length;
+      let currentIndex = 0;
+  
+      while (currentIndex < totalFiles) {
+          const currentBatch = selectedFiles.slice(currentIndex, currentIndex + batchSize);
+  
+          // Create an array to store promises for the current batch uploads
+          const uploadPromises = currentBatch.map(async (file: any) => {
+              const formData = new FormData();
+              formData.append('file', file);
+              formData.append('email', email);
+  
+              // Send the file to the server
+              const response = await fetch('./api/upload', {
+                  method: 'POST',
+                  body: formData
+              });
+  
+              // Return the parsed JSON response
+              return response.json();
+          });
+  
+          // Wait for all upload promises in the current batch to resolve
+          const results = await Promise.all(uploadPromises);
+  
+          // Check if any upload in the batch failed
+          const hasFailed = results.some(result => !result.success);
+          if (hasFailed) {
+              setMessage('Some files in the batch failed to upload');
+              // Handle error or retry logic if needed
+          } else {
+              // All files in the batch uploaded successfully
+              setMessage('Files in the batch uploaded successfully');
+          }
+  
+          currentIndex += batchSize;
+      }
+  
+      setMessage('All files uploaded successfully');
+    } catch (error) {
+        console.error('Error uploading files:', error);
+        setMessage('Error uploading files');
     } finally {
-      setLoading(false)
-      resetForm()
-    }
+        setLoading(false);
+        resetForm();
+    }  
   }
   
   return (
