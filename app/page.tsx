@@ -82,7 +82,7 @@ export default function Home() {
       { loading && <LoadingSpinner /> }
       { message && <Message params={{ textMessage: message }}/> }
       <h1>@Xodus media archiver</h1>
-      <form action="" onSubmit={(event) => handleUpload(event)} className={styles.form}>
+      <form action="" encType="multipart/form-data" onSubmit={(event) => handleUpload(event)} className={styles.form}>
         <div className={styles.formGroup}>
           <label htmlFor="email">What is your email?</label>
           <input type="text" placeholder="Example123@gmail.com" onChange={(e) => setEmail(e.target.value)}/>
