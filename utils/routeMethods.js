@@ -1,22 +1,79 @@
 import { Dropbox } from 'dropbox';
 import { refreshDropboxToken } from './refreshDropboxToken';
+// import fetch from 'node-fetch'
 import dotenv from 'dotenv';
 dotenv.config();
 
 // Initialize Dropbox config
+let dropboxConfig = null; // Variable to store the Dropbox configuration
+
 const initializeDropbox = async () => {
+  // Check if configuration is already initialized
+  if (dropboxConfig) {
+    return dropboxConfig; // Return the stored configuration
+  }
+
   const refreshedToken = await refreshDropboxToken();
-  return {
+  
+  // Create the configuration object
+  dropboxConfig = {
     fetch,
     clientId: process.env.DROPBOX_APP_KEY,
     clientSecret: process.env.DROPBOX_APP_SECRET,
     accessToken: refreshedToken.access_token
   };
+
+  return dropboxConfig; // Return the configuration
 };
 
+// I have to make this pseudo API function because of weird edge server stuff
+export async function uploadFiles(formData) {
+  try {
+    const config = await initializeDropbox()
+    console.log(config)
+    console.log(process.env.DROPBOX_REFRESH_TOKEN)
+    const getAllFormDataValues = (formData, key) => {
+      const values = [];
+      for (const [formDataKey, formDataValue] of formData.entries()) {
+        if (formDataKey === key) {
+          values.push(formDataValue);
+        }
+      }
+      return values;
+    };
+
+    const files = getAllFormDataValues(formData, 'file');
+
+    const newFolderName = formData.get('email')
+    const personalFolder = await createNewDropboxFolder(newFolderName, config)
+
+    // Upload each file in parallel
+    const uploadPromises = files.map(async file => {
+      return uploadFileToDropbox(file, personalFolder, config);
+    });
+
+    // Check if every promise is resolved or rejected
+    const results = await Promise.allSettled(uploadPromises);
+
+    return {
+      success: true,
+      message: "Files uploaded successfully",
+      results,
+      status: 200
+    }
+  } catch (error) {
+    console.error("Failed to upload files:", error);
+    return {
+      success: false,
+      message: "Failed to upload files",
+      error: error,
+      status: 500
+    }
+  }
+}
+
 // Upload a single file to Dropbox
-export async function uploadFileToDropbox(file, path = '/') {
-  const config = await initializeDropbox()
+export async function uploadFileToDropbox(file, path = '/', config) {
   const dbx = new Dropbox(config);
   dbx.usersGetCurrentAccount()
   .catch(function(error) {
@@ -75,8 +132,7 @@ export async function uploadFileToDropbox(file, path = '/') {
   return false
 }
 
-export async function createNewDropboxFolder(folderName) {
-  const config = await initializeDropbox()
+export async function createNewDropboxFolder(folderName, config) {
   // Format the date so it doesn't have slashes
   function formatDate(dateString) {
     const parts = dateString.split("/");

@@ -6,6 +6,7 @@ import DisplayImages from "./components/DisplayImages";
 import LoadingSpinner from './components/LoadingSpinner';
 import Message from './components/Message';
 import { useState, useRef } from 'react'
+import { uploadFiles } from '../utils/routeMethods'
 
 export default function Home() {
   const [selectedFiles, setSelectedFiles] = useState<any>([]);
@@ -54,6 +55,7 @@ export default function Home() {
       const batchSize = 3; // Set the batch size as per your preference
       const totalFiles = selectedFiles.length;
       let currentIndex = 0;
+      let failedUploads: Array<String> = []
   
       while (currentIndex < totalFiles) {
           const currentBatch = selectedFiles.slice(currentIndex, currentIndex + batchSize);
@@ -64,14 +66,11 @@ export default function Home() {
               formData.append('file', file);
               formData.append('email', email);
   
-              // Send the file to the server
-              const response = await fetch('./api/upload', {
-                  method: 'POST',
-                  body: formData
-              });
+              // Send the file to the client side API server
+              // I cant use an API because of Vercel having problems with absolute paths
+              const response = await uploadFiles(formData)
   
-              // Return the parsed JSON response
-              return response.json();
+              return response
           });
   
           // Wait for all upload promises in the current batch to resolve
@@ -79,8 +78,9 @@ export default function Home() {
   
           // Check if any upload in the batch failed
           const hasFailed = results.some(result => !result.success);
+          // failedUploads.concat(hasFailed)
           if (hasFailed) {
-              setMessage('Some files in the batch failed to upload');
+              setMessage(`Some files in the batch failed to upload: ${failedUploads.join(', ')}`);
               // Handle error or retry logic if needed
           } else {
               // All files in the batch uploaded successfully
@@ -104,7 +104,7 @@ export default function Home() {
     <main className={styles.main}>
       { loading && <LoadingSpinner /> }
       { message && <Message params={{ textMessage: message }}/> }
-      <h1>@Xodus media archiver</h1>
+      <h1>𐤀Xodus media archiver</h1>
       <form action="" encType="multipart/form-data" onSubmit={(event) => handleUpload(event)} className={styles.form}>
         <div className={styles.formGroup}>
           <label htmlFor="email">What is your email?</label>
