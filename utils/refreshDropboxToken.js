@@ -1,7 +1,8 @@
+"use client"
 import dotenv from 'dotenv'
 dotenv.config()
 
-export async function refreshDropboxToken() {
+export default async function refreshDropboxToken() {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
   myHeaders.append("Authorization", 'Basic ' + btoa(process.env.DROPBOX_APP_KEY + ':' + process.env.DROPBOX_APP_SECRET));
@@ -19,7 +20,7 @@ export async function refreshDropboxToken() {
 
   console.log(urlencoded)
 
-  async function fetchToken(requestOptions) {
+  async function fetchToken() {
     try {
       const response = await fetch("https://api.dropboxapi.com/oauth2/token", requestOptions)
       .then(response => response.json())
@@ -31,7 +32,7 @@ export async function refreshDropboxToken() {
     }
   }
 
-  const refreshRequest = await fetchToken(requestOptions) 
+  const refreshRequest = await fetchToken() 
 
   return await refreshRequest
 }
