@@ -103,7 +103,7 @@ export default function Home() {
       { loading && <LoadingSpinner /> }
       { message.message && <Message params={{ textMessage: message.message, success: message.success }}/> }
       <h1>𐤀Xodus media archiver</h1>
-      <p>Upload files to your account, and we'll archive them</p>
+      <p>Upload files to your account, and we&apos;ll archive them</p>
       <form action="" encType="multipart/form-data" onSubmit={(event) => handleUpload(event)} className={styles.form}>
         <div className={styles.formGroup}>
           <label htmlFor="email">What is your email?</label>
