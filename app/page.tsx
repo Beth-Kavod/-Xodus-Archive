@@ -87,7 +87,9 @@ export default function Home() {
               setMessage({ message: 'Files in the batch uploaded successfully', success: true });
           }
       }
-  
+
+      if (failedUploads.length) throw new Error('Error uploading files');
+
       setMessage({ message: 'All files uploaded successfully', success: true });
     } catch (error) {
         console.error('Error uploading files:', error);
