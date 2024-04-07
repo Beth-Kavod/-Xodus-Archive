@@ -60,6 +60,8 @@ export async function uploadFiles(formData) {
       status: 200
     }
   } catch (error) {
+    // This error is only thrown if the folder does'nt exist, which is fine
+    if (error.status === (409 || 429)) return
     console.error("Failed to upload files:", error);
     return {
       success: false,

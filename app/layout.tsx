@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "𐤀Xodus media archive",
+  title: "𐤀Xodus media archive𐤀",
   description: "MEdia archive to store media taken at the @Xodus event for the total solar eclipse of 2024",
 };
 

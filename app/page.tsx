@@ -54,10 +54,10 @@ export default function Home() {
     try {
       const batchSize = 3; // Set the batch size as per your preference
       const totalFiles = selectedFiles.length;
-      let currentIndex = 0;
       let failedUploads: Array<String> = []
   
-      while (currentIndex < totalFiles) {
+      // Loop through the selected files in batches to upload them
+      for (let currentIndex = 0; currentIndex <= totalFiles; currentIndex += batchSize) {
           const currentBatch = selectedFiles.slice(currentIndex, currentIndex + batchSize);
   
           // Create an array to store promises for the current batch uploads
@@ -86,8 +86,6 @@ export default function Home() {
               // All files in the batch uploaded successfully
               setMessage('Files in the batch uploaded successfully');
           }
-  
-          currentIndex += batchSize;
       }
   
       setMessage('All files uploaded successfully');
@@ -105,6 +103,7 @@ export default function Home() {
       { loading && <LoadingSpinner /> }
       { message && <Message params={{ textMessage: message }}/> }
       <h1>𐤀Xodus media archiver</h1>
+      <p>Upload files to your account, and we'll archive them</p>
       <form action="" encType="multipart/form-data" onSubmit={(event) => handleUpload(event)} className={styles.form}>
         <div className={styles.formGroup}>
           <label htmlFor="email">What is your email?</label>
