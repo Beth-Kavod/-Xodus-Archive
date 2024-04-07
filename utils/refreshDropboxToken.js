@@ -17,7 +17,21 @@ export async function refreshDropboxToken() {
     redirect: "follow"
   };
 
-  const refreshRequest = await fetch("https://api.dropboxapi.com/oauth2/token", requestOptions)
+  console.log(urlencoded)
 
-  return await refreshRequest.json()
+  async function fetchToken(requestOptions) {
+    try {
+      const response = await fetch("https://api.dropboxapi.com/oauth2/token", requestOptions)
+      .then(response => response.json())
+        
+      return response
+    } catch (error) {
+      console.error(error)
+      return false
+    }
+  }
+
+  const refreshRequest = await fetchToken(requestOptions) 
+
+  return await refreshRequest
 }
