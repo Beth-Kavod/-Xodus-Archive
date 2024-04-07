@@ -2,7 +2,6 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 export default async function getRefreshDropboxToken() {
-  console.log(process.env.DROPBOX_REFRESH_TOKEN)
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
   myHeaders.append("Authorization", 'Basic ' + btoa(process.env.DROPBOX_APP_KEY + ':' + process.env.DROPBOX_APP_SECRET));
@@ -17,8 +16,6 @@ export default async function getRefreshDropboxToken() {
     body: urlencoded,
     redirect: "follow"
   };
-
-  console.log(urlencoded)
 
   async function fetchToken() {
     try {
