@@ -8,6 +8,12 @@ import Message from './components/Message';
 import { useState, useRef } from 'react'
 import { uploadFiles } from '../utils/routeMethods'
 
+// ! -------------------------------- TESTING ------------------------------- */
+import dotenv from 'dotenv'
+dotenv.config()
+console.log(process.env.DROPBOX_APP_KEY)
+// ! -------------------------------------------------------------------------*/
+
 export default function Home() {
   const [selectedFiles, setSelectedFiles] = useState<any>([]);
   const [email, setEmail] = useState<any>('');
@@ -38,10 +44,11 @@ export default function Home() {
   }
 
   function resetForm() {
-    setSelectedFiles([])
+    // setSelectedFiles([])
     /* if (imageRef.current) { 
       imageRef.current.value = ""
     } */
+    console.log("reset")
   }
 
   const handleUpload = async (event: any) => {

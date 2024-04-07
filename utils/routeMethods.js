@@ -1,6 +1,5 @@
-"use client"
 import { Dropbox } from 'dropbox';
-import refreshDropboxToken from './refreshDropboxToken';
+import getRefreshDropboxToken from './getRefreshDropboxToken';
 // import fetch from 'node-fetch'
 import dotenv from 'dotenv';
 dotenv.config();
@@ -14,14 +13,14 @@ const initializeDropbox = async () => {
     return dropboxConfig; // Return the stored configuration
   }
 
-  const refreshedToken = await refreshDropboxToken();
+  const refreshedToken = await getRefreshDropboxToken();
   
   // Create the configuration object
   dropboxConfig = {
-    fetch,
+    // !fetch,  // I think this breaks it
     clientId: process.env.DROPBOX_APP_KEY,
     clientSecret: process.env.DROPBOX_APP_SECRET,
-    accessToken: refreshedToken.access_token
+    accessToken: refreshedToken
   };
 
   return dropboxConfig; // Return the configuration
@@ -31,8 +30,6 @@ const initializeDropbox = async () => {
 export async function uploadFiles(formData) {
   try {
     const config = await initializeDropbox()
-    console.log(config)
-    console.log(process.env.DROPBOX_REFRESH_TOKEN)
     const getAllFormDataValues = (formData, key) => {
       const values = [];
       for (const [formDataKey, formDataValue] of formData.entries()) {
