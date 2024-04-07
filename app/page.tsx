@@ -12,25 +12,25 @@ export default function Home() {
   const [selectedFiles, setSelectedFiles] = useState<any>([]);
   const [email, setEmail] = useState<any>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<string>("");
+  const [message, setMessage] = useState({message: "", success: false});
   const imageRef = useRef();
 
   function validateForm() {
     const emailRegex = /^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/
 
     if (!email) {
-      setMessage('Please enter your email')
+      setMessage({ message: 'Please enter your email', success: false })
       return false
     } else if (!emailRegex.test(email)) {
-      setMessage('Email must follow proper email format')
+      setMessage({ message: 'Email must follow proper email format', success: false })
       return false
     }
 
     if (!selectedFiles.length) {
-      setMessage('Please select at least one file')
+      setMessage({ message: 'Please select at least one file', success: false })
       return false
     } else if (selectedFiles.length > 50) {
-      setMessage('Please select no more than 50 files at a time')
+      setMessage({ message: 'Please select no more than 50 files at a time', success: false })
       return false
     }
 
@@ -80,18 +80,18 @@ export default function Home() {
           const hasFailed = results.some(result => !result.success);
           // failedUploads.concat(hasFailed)
           if (hasFailed) {
-              setMessage(`Some files in the batch failed to upload: ${failedUploads.join(', ')}`);
+              setMessage({ message: `Some files in the batch failed to upload: ${failedUploads.join(', ')}`, success: false});
               // Handle error or retry logic if needed
           } else {
               // All files in the batch uploaded successfully
-              setMessage('Files in the batch uploaded successfully');
+              setMessage({ message: 'Files in the batch uploaded successfully', success: true });
           }
       }
   
-      setMessage('All files uploaded successfully');
+      setMessage({ message: 'All files uploaded successfully', success: true });
     } catch (error) {
         console.error('Error uploading files:', error);
-        setMessage('Error uploading files');
+        setMessage({ message: 'Error uploading files', success: false });
     } finally {
         setLoading(false);
         resetForm();
@@ -101,7 +101,7 @@ export default function Home() {
   return (
     <main className={styles.main}>
       { loading && <LoadingSpinner /> }
-      { message && <Message params={{ textMessage: message }}/> }
+      { message.message && <Message params={{ textMessage: message.message, success: message.success }}/> }
       <h1>𐤀Xodus media archiver</h1>
       <p>Upload files to your account, and we'll archive them</p>
       <form action="" encType="multipart/form-data" onSubmit={(event) => handleUpload(event)} className={styles.form}>

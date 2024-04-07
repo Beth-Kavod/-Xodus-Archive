@@ -1,3 +1,12 @@
 .message {
-  /* background-color: azure; */
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.success {
+  background-color: green;
+}
+
+.error {
+  background-color: red;
 }
