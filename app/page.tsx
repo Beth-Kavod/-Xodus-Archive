@@ -109,7 +109,7 @@ export default function Home() {
       <form action="" encType="multipart/form-data" onSubmit={(event) => handleUpload(event)} className={styles.form}>
         <div className={styles.formGroup}>
           <label htmlFor="email">Email:</label>
-          <input type="text" placeholder="Example123@gmail.com" onChange={(e) => setEmail(e.target.value)}/>
+          <input style={{ width: '200px'}} type="text" placeholder="Example123@gmail.com" onChange={(e) => setEmail(e.target.value)}/>
         </div>
         <hr />
         <div className={styles.formGroup}>

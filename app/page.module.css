@@ -41,7 +41,9 @@
 
 @media screen and (max-width: 600px) {
   .main {
+    min-height: 60vh;
     padding: 2rem;
+    /* margin-bottom: 2rem; */
   }
 
   .form {

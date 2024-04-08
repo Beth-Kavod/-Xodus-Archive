@@ -28,8 +28,8 @@ export default function DisplayImages({ params }: Props) {
   return (
     <div style={{ width: "100%"}}>
       <div style={{ width: "100%", display: 'flex', justifyContent: 'space-between'}}>
-        <h3>Selected Files: {selectedFiles.length}</h3>
-        <select>
+        <h3>Files: {selectedFiles.length}</h3>
+        <select style={{ width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', padding: '5px', flexBasis: 1, boxSizing: 'border-box' }}>
           {selectedFiles.map((file: File, index: any) => (
             <option key={index} onClick={() => setPickedFile(file)}>{file.name}</option>
           ))}
