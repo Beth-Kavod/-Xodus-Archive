@@ -6,13 +6,13 @@ import DisplayImages from "./components/DisplayImages";
 import LoadingSpinner from './components/LoadingSpinner';
 import Message from './components/Message';
 import { useState, useRef } from 'react'
-import { uploadFiles } from '../utils/routeMethods'
+import uploadFiles from '../utils/uploadFiles'
 
 export default function Home() {
   const [selectedFiles, setSelectedFiles] = useState<any>([]);
   const [email, setEmail] = useState<any>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState({message: "", success: false});
+  const [message, setMessage] = useState({ message: "", success: false });
   const imageRef = useRef();
 
   const scrollToTop = () => {
@@ -60,41 +60,38 @@ export default function Home() {
     setLoading(true)
 
     try {
-      const batchSize = 3; // Set the batch size as per your preference
-      const totalFiles = selectedFiles.length;
+      /* const batchSize = 10;  Set the batch size as per your preference
+      const totalFiles = selectedFiles.length; */
       let failedUploads: Array<String> = []
   
       // Loop through the selected files in batches to upload them
-      for (let currentIndex = 0; currentIndex <= totalFiles; currentIndex += batchSize) {
-          const currentBatch = selectedFiles.slice(currentIndex, currentIndex + batchSize);
+      // for (let currentIndex = 0; currentIndex <= totalFiles; currentIndex += batchSize) {
+          // const currentBatch = selectedFiles.slice(currentIndex, currentIndex + batchSize);
   
           // Create an array to store promises for the current batch uploads
-          const uploadPromises = currentBatch.map(async (file: any) => {
-              const formData = new FormData();
-              formData.append('file', file);
-              formData.append('email', email);
-  
-              // Send the file to the client side API server
-              // I cant use an API because of Vercel having problems with absolute paths
-              const response = await uploadFiles(formData)
-  
-              return response
+          const formData = new FormData();
+          selectedFiles.map(async (file: any) => {
+            formData.append('file', file);
           });
-  
+            
+            // Add the folder name to the FormData
+            formData.append('email', email);
+
+            const response = await uploadFiles(formData)
           // Wait for all upload promises in the current batch to resolve
-          const results = await Promise.all(uploadPromises);
   
           // Check if any upload in the batch failed
-          const hasFailed = results.some(result => !result.success);
           // failedUploads.concat(hasFailed)
-          if (hasFailed) {
+          if (/* !response?.success */ true) {
               setMessage({ message: `Some files in the batch failed to upload: ${failedUploads.join(', ')}`, success: false});
+              scrollToTop()
               // Handle error or retry logic if needed
           } else {
               // All files in the batch uploaded successfully
               setMessage({ message: 'Files in the batch uploaded successfully', success: true });
+              scrollToTop()
           }
-      }
+      // }
 
       if (failedUploads.length) throw new Error('Error uploading files');
 
@@ -114,7 +111,7 @@ export default function Home() {
       { message.message && <Message params={{ textMessage: message.message, success: message.success }}/> }
       <h1>𐤀Xodus media archiver</h1>
       <p style={{ textAlign: 'center' }}>Upload files to your folder with email, and we&apos;ll archive them</p>
-      <form action="" encType="multipart/form-data" onSubmit={(event) => handleUpload(event)} className={styles.form}>
+      <form encType="multipart/form-data" onSubmit={(event) => handleUpload(event)} className={styles.form}>
         <div className={styles.formGroup}>
           <label htmlFor="email">Email:</label>
           <input style={{ width: '200px'}} type="text" placeholder="Example123@gmail.com" onChange={(e) => setEmail(e.target.value)}/>
