@@ -4,13 +4,11 @@
 }
 
 .select { 
-  width: 100%;
-  white-space: 'nowrap'; 
-  overflow: 'hidden'; 
-  text-overflow: 'ellipsis'; 
-  padding: '5px'; 
-  flex-basis: '1'; 
-  box-sizing: 'border-box' 
+  width: 100%; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  padding: 5px; 
+  box-sizing: border-box;
 }
 
 .imageContainer { 
@@ -26,12 +24,6 @@
   margin: 8px; 
   border-radius: 8px; 
   box-sizing: border-box
-}
-
-.selectFiles { 
-  width: "100%"; 
-  display: 'flex'; 
-  justify-content: 'space-between'
 }
 
 .selectFiles > h3 {

@@ -14,13 +14,18 @@ export default function UploadImages({ params }: Props) {
   };
 
   return (
+    <>
+    <label htmlFor="fileSelect" style={{ wordBreak: 'keep-all' }}>Upload:</label>
     <input 
       type="file" 
       onChange={handleFileChange} 
       accept='image/*, video/*'
       ref={imageRef}
       value=""
+      id="fileSelect"
+      style={{ width: 200 }}
       multiple 
     />
+    </>
   );
 }
