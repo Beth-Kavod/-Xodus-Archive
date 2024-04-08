@@ -1,6 +1,7 @@
 "use client"
 import Image from 'next/image'
 import { useState } from 'react'
+import './DisplayImages.css'
 
 interface Props {
   params: {
@@ -26,17 +27,17 @@ export default function DisplayImages({ params }: Props) {
   }
 
   return (
-    <div style={{ width: "100%"}}>
-      <div style={{ width: "100%", display: 'flex', justifyContent: 'space-between'}}>
+    <div className='container'>
+      <div className='selectFiles'>
         <h3>Files: {selectedFiles.length}</h3>
-        <select style={{ width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', padding: '5px', flexBasis: 1, boxSizing: 'border-box' }}>
+        <select className='select'>
           {selectedFiles.map((file: File, index: any) => (
             <option key={index} onClick={() => setPickedFile(file)}>{file.name}</option>
           ))}
         </select>
       </div>
       { pickedFile.name && selectedFiles.length > 0 &&
-        <div style={{ display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'center' }}>
+        <div className='imageContainer'>
           <br />
           <Image
             src={ URL.createObjectURL(pickedFile)}
@@ -44,19 +45,11 @@ export default function DisplayImages({ params }: Props) {
             width="0"
             height="0"
             sizes="100vw"
-            style={{ width: '100%', height: 'auto', padding: 8, borderRadius: 8, boxSizing: "border-box" }}
+            className='showImage'
           />
-          <button style={{ width: '50%' }} onClick={removeFile}>Remove</button>
+          <button className='remove' onClick={removeFile}>Remove Image</button>
         </div>
       } 
     </div>
   )
 }
-
-{/* <Image 
-            key={index}
-            width={400}
-            height={400}
-            src={URL.createObjectURL(file)}
-            alt={`Selected file ${index + 1}`}
-          /> */}
