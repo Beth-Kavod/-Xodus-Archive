@@ -122,6 +122,7 @@ export default function Home() {
         <hr />
         <button>Submit</button>
       </form>
+      <h3>Media archive viewer coming soon!</h3>
     </main>
   );
 }

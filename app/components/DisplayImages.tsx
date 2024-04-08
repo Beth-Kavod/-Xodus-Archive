@@ -35,8 +35,8 @@ export default function DisplayImages({ params }: Props) {
           ))}
         </select>
       </div>
-      { pickedFile.name && selectedFiles.length > 1 &&
-        <>
+      { pickedFile.name && selectedFiles.length > 0 &&
+        <div style={{ display: 'flex', width: '100%', flexDirection: 'column', alignItems: 'center' }}>
           <br />
           <Image
             src={ URL.createObjectURL(pickedFile)}
@@ -44,10 +44,10 @@ export default function DisplayImages({ params }: Props) {
             width="0"
             height="0"
             sizes="100vw"
-            style={{ width: '100%', height: 'auto' }}
+            style={{ width: '100%', height: 'auto', padding: 8, borderRadius: 8, boxSizing: "border-box" }}
           />
-          <button onClick={removeFile}>Remove</button>
-        </>
+          <button style={{ width: '50%' }} onClick={removeFile}>Remove</button>
+        </div>
       } 
     </div>
   )

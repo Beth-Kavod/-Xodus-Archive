@@ -13,6 +13,10 @@
   text-align: center;
 }
 
+.main h3 {
+  text-align: center;
+}
+
 .form {
   display: flex;
   flex-direction: column;
@@ -28,6 +32,11 @@
 .formGroup {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.formGroup > input {
+  padding: 5px;
 }
 
 @media screen and (max-width: 600px) {
