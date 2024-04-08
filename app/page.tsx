@@ -108,7 +108,7 @@ export default function Home() {
       <p>Upload files to your account, and we&apos;ll archive them</p>
       <form action="" encType="multipart/form-data" onSubmit={(event) => handleUpload(event)} className={styles.form}>
         <div className={styles.formGroup}>
-          <label htmlFor="email">What is your email?</label>
+          <label htmlFor="email">Email:</label>
           <input type="text" placeholder="Example123@gmail.com" onChange={(e) => setEmail(e.target.value)}/>
         </div>
         <hr />
