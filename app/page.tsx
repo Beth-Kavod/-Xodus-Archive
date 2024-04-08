@@ -15,22 +15,30 @@ export default function Home() {
   const [message, setMessage] = useState({message: "", success: false});
   const imageRef = useRef();
 
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+  }
+
   function validateForm() {
     const emailRegex = /^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/
 
     if (!email) {
       setMessage({ message: 'Please enter your email', success: false })
+      scrollToTop()
       return false
     } else if (!emailRegex.test(email)) {
       setMessage({ message: 'Email must follow proper email format', success: false })
+      scrollToTop()
       return false
     }
 
     if (!selectedFiles.length) {
       setMessage({ message: 'Please select at least one file', success: false })
+      scrollToTop()
       return false
     } else if (selectedFiles.length > 50) {
       setMessage({ message: 'Please select no more than 50 files at a time', success: false })
+      scrollToTop()
       return false
     }
 
